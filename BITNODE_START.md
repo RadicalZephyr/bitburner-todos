@@ -23,6 +23,33 @@ some mechanism for allowing specific tasks to grow in size.
 
 ## Ideas
 
+### Priorities
+
+We want to be able to provide smooth growth through increasing amounts
+of memory.
+
+Minimizing downtime is important. Ideally, each task will be able to
+respond to changing memory availability.
+
+One situation that I want to be able to handle more gracefully is
+upgrading personal servers. This is complex because in order to
+upgrade the server there need to be zero scripts running on it. This
+means we need some mechanism to be able to shift allocations around
+to different hosts transparently.
+
+### Memory Pooling?
+
+We could incorporate memory pooling, but we kind of get a nice balance
+right now emergently by the fact that we allocate harvesting batches
+in chunks that contain all four phases (HWGW) so these chunks are much
+larger than the chunk size of till and sow jobs (which have a chunk
+size of one thread of the relevant scripts).
+
+Since we prioritize allocation to harvest scripts first, we use the
+majority of memory on harvesting, then we can fill in the gaps in
+servers created by host boundaries, or fill up smaller servers that
+can't fit even one harvest batch with sowing and till scripts.
+
 ### Till and Sow
 
 With shrinkable allocations till and sow scripts can request the full
@@ -31,7 +58,7 @@ of an allocation, then the memory manager can send new chunks of
 memory to each allocation until it fulfills the max amount it asked
 for.
 
-OwnedAllocations should become a real class, internally they would
+`OwnedAllocations` should become a real class, internally they would
 have a port (allocated dynamically from the `PortAllocator`) the
 `MemoryAllocator` can send messages to. Then in the main loop of the
 sow or till tasks they can simply loop through the chunks they have
@@ -40,7 +67,7 @@ and transparently end up spawning more tasks.
 ### Harvest
 
 Growing a harvest task can work the same way up until the number of
-chunks reaches maximum ovelap. To keep growing it after that, you need
+chunks reaches maximum overlap. To keep growing it after that, you need
 to start increasing the size of each batch which doesn't fit neatly
 into the organization of the way we allocate memory.
 
