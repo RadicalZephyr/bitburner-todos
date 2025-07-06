@@ -1,0 +1,113 @@
+* Batch Hacking
+
+** Till Script
+
+*** Track changes to hacking skill and batch times
+
+Cancel and restart weakening jobs once our hacking skill rises enough
+that it becomes at least 10% faster to do so.
+
+* Utility Scripts
+
+** Buy Servers
+
+Need to integrate it with the rest of the system, particularly the
+Memory Allocator and Task Selector. I guess Discovery could be part of
+it too?
+
+A lot of the grief of it could be mitigated by just not changing the
+name...
+
+* Services
+
+** Task Selector
+
+*** Dynamic changes to expected value threshold
+
+One neat thing about having the config values be writable properties
+is that we can kind of treat them like global dynamic variables.
+
+Under bitnode-first-entry conditions (with Source File 1 for base 32GB
+RAM on home), there is some awkwardness with the expected value
+threshold. I had it set fairly high to exclude n00dles from later in
+the run when it's just not worth the threads, but early on it is
+_essential_ to hack n00dles because with the amount of RAM available
+trying to even sow foodnstuff can be slated to take up to 15 hours!!
+That's so long!
+
+I think we need to special case startup and if RAM is really
+constrained like when you own 0 or 1 port crackers, just focus on
+moving n00dles through the lifecycle. Then, once n00dles is at least
+at a full-overlap 1-hack-thread batch we can start dedicating RAM
+towards moving foodnstuff through the lifecycle.
+
+The reason is at this point, hacking n00dles is basically our most
+profitable thing to do with the limited RAM we have and scaling that
+means getting money faster which means getting to more port crackers
+and more RAM faster, which means we can till and sow other more
+profitable targets much much faster.
+
+*** Dynamically choose scripts better
+
+ - Kill and restart tasks that are under-resourced
+
+OR
+
+ - Support growing allocations
+
+In early bit-nodes every time you acquire a new port-cracking program,
+the increased memory is greedily assigned to a task that is not
+already in-progress. It would almost always (when isn't it?) be better
+to increase the RAM available to the next-best task that is in
+progress.
+
+This requires a sophisticated collaboration between the Task Selector
+and the tasks it has launched. This could be done using the
+heartbeat. Maybe we could add the total expected time to complete the
+task. More useful would be reporting that we could use more resources.
+
+
+
+*** Check RAM size of task program as part of task
+
+Right now we just check the number of children it will spawn, whoops.
+
+*** Segment RAM to different task types
+
+This might be more a product of how much time it took me to get the
+system working again under low-RAM conditions and the fact that I
+fixed things in phase order (till, sow, harvest) means that a lot of hosts
+were ready to start harvesting when I got the manager working again.
+
+But right now, harvesting jobs can easily starve the tilling and
+sowing jobs of money. Especially since harvesting jobs are the most
+easily scalable. The current behavior is that my harvesting jobs are
+scaling all the way up to hacking 50% of the target's money, which is
+a lot of threads. This leaves no room for tilling or sowing new
+targets.
+
+Instead of just giving all memory to harvesting, we should segment the
+free memory. Or perhaps just use a less greedy strategy?
+
+Maybe we want to allocate to tilling and sowing first, but try and
+time it so that they will be ready by the time we have the level to
+target that host?
+
+** Memory Allocator
+
+*** Change AllocationRequests to take an options object so optional params are named
+
+*** Change amount of setAside RAM on home
+
+When it's low we want to reserve less when starting, but once we have
+some decent sized servers it would be nice to increase the setAside
+RAM so we can run programs on home.
+
+** Make Buy Servers script into a daemon
+
+Once the system can handle new hosts gracefully we should turn a
+version of the buy-servers script into a long-running service daemon
+that basically upgrades servers as the money comes in. Probably one by
+one instead of in a whole batch.
+
+* Stocks
