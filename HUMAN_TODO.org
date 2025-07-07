@@ -95,10 +95,6 @@ target that host?
 
 ** Memory Allocator
 
-*** Add numeric display of server RAM size to log display
-
-*** Change AllocationRequests to take an options object so optional params are named
-
 *** Change amount of setAside RAM on home
 
 When it's low we want to reserve less when starting, but once we have
