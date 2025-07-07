@@ -1,5 +1,19 @@
 * Batch Hacking
 
+** General Improvement
+
+*** Minimize RAM cost of task selector and monitor
+
+I think these scripts are likely a little bloated right now because of
+importing functions from other scripts that are meant to be run (like
+harvest, sow and till), thus making it likely they are accidentally
+having in APIs they are never going to use counted against their
+static RAM size.
+
+The thing to do here is probably make a new `batch/lib` folder and
+make targeted lib files that only contain the minimum number of
+functions actually used in multiple files.
+
 ** Till Script
 
 *** Track changes to hacking skill and batch times
