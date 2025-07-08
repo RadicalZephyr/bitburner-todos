@@ -36,6 +36,25 @@ name...
 
 ** Task Selector
 
+*** Dynamic changes to hackLevelVelocityThreshold
+
+On my last augment install run I ran into an interesting issue. My
+hack level/hack experience multiplier was so high that my hacking
+level was far above the minimum threshold for a stable hacking level
+velocity that was hardcoded into the Task Selector. I made this a
+config so at least the user can adjust it, but now there are so many
+CONFIG values and you kind of have to know which ones affect which
+behavior.
+
+**** Document CONFIG values
+
+Step one is documenting them and when it's useful to change them.
+
+**** Dynamically adjust CONFIG values based on heuristics
+
+Once I describe what I understand about when to change the various
+config values, these heuristics should be built into the
+
 *** Dynamic changes to expected value threshold
 
 One neat thing about having the config values be writable properties
