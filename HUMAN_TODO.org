@@ -134,3 +134,22 @@ that basically upgrades servers as the money comes in. Probably one by
 one instead of in a whole batch.
 
 * Stocks
+
+
+* Utility
+
+** New Script for Collecting Augments
+
+Basically, a script that loops, looks at the page for a "Faction
+Augments" menu, then records all the information it can scrape.
+
+It would display these unpurchased augments in reverse cost order
+(most expensive at the top) to assist in buying augments in the
+correct order.
+
+*** Bonus features
+
+ - Track when the price multiplier changes and change stored prices accordingly
+ - Compare to player's money and display in red when too expensive
+ - Also display an estimated time to afford based on rate of money gain
+ - Implement iterating through all faction augments page automatically
