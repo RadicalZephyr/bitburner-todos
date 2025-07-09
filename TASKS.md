@@ -757,3 +757,22 @@ Options:
 3. Update any scripts needing dynamic ports (e.g. `batch/harvest.ts`) to request a port via this client instead of using `ns.pid`.
 4. Ensure all exported functions have doc comments.
 5. Run `npm run build` and `npx jest` to verify typings and tests.
+
+
+## Growable Allocations
+
+1. In `src/services/memory.tsx`, update the request loop to handle `GrowableRequest`.
+
+   * Allocate memory as with `MessageType.Request`.
+   * Store the request’s port on the created allocation so extra
+     chunks can be sent later.
+
+2. In `src/services/allocator.ts`, modify `Allocation` to track:
+
+   * desired total chunks (`requestedChunks`) and an optional `notifyPort`.
+
+3. Add a method `growAllocation(allocation: Allocation, numChunks: number)` that allocates additional chunks if workers have free RAM.
+
+4. Periodically check for free RAM in the main loop (`src/services/memory.tsx`) and attempt to grow allocations toward `requestedChunks`.
+
+   * When new chunks are added, send a message over the stored `notifyPort` describing the host and chunk information.
