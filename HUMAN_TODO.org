@@ -14,6 +14,17 @@ The thing to do here is probably make a new `batch/lib` folder and
 make targeted lib files that only contain the minimum number of
 functions actually used in multiple files.
 
+*** Refactor port reading to use separate promise task structure?
+
+Codex showed me that we can maybe just create a "polling function"
+Promise to continually read from a port and do stuff with the result.
+
+This would simplify the structure of the standard service daemons main
+loops. Is there an advantage to it? Faster response times because
+reading from the port would happen as soon as the write notifies the
+reader.
+
+
 ** Till Script
 
 *** Track changes to hacking skill and batch times
