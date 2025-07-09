@@ -776,3 +776,15 @@ Options:
 4. Periodically check for free RAM in the main loop (`src/services/memory.tsx`) and attempt to grow allocations toward `requestedChunks`.
 
    * When new chunks are added, send a message over the stored `notifyPort` describing the host and chunk information.
+
+## Implement GrowableAllocation
+
+1. In `src/batch/client/growable_memory.ts`, define `GrowableAllocation`.
+
+   * Store the allocation id, current chunks, and the listening port.
+   * Continuously poll the port for new chunk messages and merge them into the internal chunk list.
+2. Provide a method `launch(ns: NS, script: string, threads: number | LaunchRunOptions, ...args: ScriptArg[])`.
+
+   * Mirror `launch` from `src/services/launch.ts` but distribute threads across the internal chunks.
+   * Handle dependency copying as done in the original `launch` helper.
+3. Provide `release(ns: NS)` and `releaseAtExit(ns: NS)` similar to `TransferableAllocation`.
