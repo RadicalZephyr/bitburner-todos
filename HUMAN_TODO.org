@@ -179,3 +179,19 @@ It always seems to get to net positive too fast. That might be because
 I'm  extremely late in the Bitnode right now and my multipliers are
 absurdly high. It would be weird if the Hacknet formulas didn't take
 into account the multipliers though right?
+
+* Hacknet
+
+** Add a data collection program to determine Hacknet production statistics
+
+Use `ns.hacknet.getNodeStats()` to produce a CSV table of data
+regarding basic hacknet production at given levels.
+
+
+** Add approximation API for Hacknet production
+
+The `src/buy-hacknet.ts` script is not usable if we don't have the
+formulas API available. Let's add a fallback mode where we make a
+crude approximation of using the formulas API to determine how much
+money an upgrade will increase our earning power by using the
+multipliers from `ns.getHacknetMultipliers()`.
