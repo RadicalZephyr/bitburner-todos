@@ -111,11 +111,6 @@ heartbeat. Maybe we could add the total expected time to complete the
 task. More useful would be reporting that we could use more resources.
 
 
-
-*** Check RAM size of task program as part of task
-
-Right now we just check the number of children it will spawn, whoops.
-
 *** Segment RAM to different task types
 
 This might be more a product of how much time it took me to get the
