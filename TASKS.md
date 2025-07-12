@@ -788,3 +788,28 @@ Options:
    * Mirror `launch` from `src/services/launch.ts` but distribute threads across the internal chunks.
    * Handle dependency copying as done in the original `launch` helper.
 3. Provide `release(ns: NS)` and `releaseAtExit(ns: NS)` similar to `TransferableAllocation`.
+
+## Test Growable Allocations
+
+The client interface to creating `GrowableAllocation`s is in
+`src/services/client/growable_memory.ts`.
+
+The `MemoryAllocator` is in `src/services/allocator.ts` and the
+message handling is in `src/services/memory.tsx`.
+
+I want to create a new client test program, similar to the file at
+`src/services/tests/mem_test_client.ts` that uses the
+`GrowableMemoryClient` to request a `GrowableAllocation`.
+
+It should start by first allocating all but 8GB of available memory
+(`MemoryClient.getFreeRam()`) in 8GB chunks in a
+`TransferableAllocation`.
+
+It will then request a `GrowableAllocation` of 32x8GB
+chunks. Initially, only 1 chunk should be returned, and we should
+verify this.
+
+Then once every five seconds the script will release one 8GB chunk
+from the `TransferableAllocation` using `MemoryClient.releaseChunks`,
+wait for 1 second and verify that the `GrowableAllocation` has
+increased by one chunk.
