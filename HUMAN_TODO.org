@@ -162,6 +162,8 @@ correct order.
  - Also display an estimated time to afford based on rate of money gain
  - Implement iterating through all faction augments page automatically
 
+* Hacknet
+
 ** Buy Hacknet Script ignores `--return-time`
 
 It always seems to get to net positive too fast. That might be because
@@ -169,7 +171,6 @@ I'm  extremely late in the Bitnode right now and my multipliers are
 absurdly high. It would be weird if the Hacknet formulas didn't take
 into account the multipliers though right?
 
-* Hacknet
 
 ** Add a data collection program to determine Hacknet production statistics
 
