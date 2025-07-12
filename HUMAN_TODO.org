@@ -134,12 +134,6 @@ target that host?
 
 ** Memory Allocator
 
-*** Change amount of setAside RAM on home
-
-When it's low we want to reserve less when starting, but once we have
-some decent sized servers it would be nice to increase the setAside
-RAM so we can run programs on home.
-
 ** Make Buy Servers script into a daemon
 
 Once the system can handle new hosts gracefully we should turn a
