@@ -906,3 +906,41 @@ any untracked processes are running.
 4. Verify typings and style with `npm run build` and `npx jest` after implementation.
 
 This completes Phase 1 by automatically ascending recruits until their multipliers meet dynamic thresholds derived from gang size.
+
+## Enhance New Gang Management Script: Phase 2
+
+1. **Add configuration**
+
+   * Extend `src/gang/config.ts` with a new entry `["recruitHorizon", 60]` to define how many seconds ahead to plan respect gains.
+   * Re-export through the existing `CONFIG` instance.
+
+2. **Create `src/gang/task-analyzer.ts`**
+
+   * Export a class `TaskAnalyzer` with methods to:
+
+     * Fetch all gang tasks using `ns.gang.getTaskNames()` and `ns.gang.getTaskStats`.
+     * Split tasks into hacking vs combat categories (`isHacking`, `isCombat`).
+     * Calculate expected money and respect yields for an average member, factoring in the current territory bonus from `ns.gang.getGangInformation()`.
+     * Provide sorted arrays `bestMoneyTasks`, `bestRespectTasks`, and `bestWarTasks`.
+
+3. **Create `src/gang/task-balancer.ts`**
+
+   * Export a function `balanceTasks(ns: NS, readyNames: string[], analyzer: TaskAnalyzer)` which:
+
+     * Reads `info = ns.gang.getGangInformation()`.
+     * Computes `respectDeficit = info.respectForNextRecruit - info.respect`.
+     * Calculates `respectFraction = Math.clamp(respectDeficit / (info.respectGainRate * CONFIG.recruitHorizon), 0, 1)`.
+     * Assigns `respectFraction * readyNames.length` members to `analyzer.bestRespectTasks[0]`, and the remainder to `analyzer.bestMoneyTasks[0]` via `ns.gang.setMemberTask`.
+
+4. **Integrate with `src/gang/boss.ts`**
+
+   * After Phase 1 bootstrapping marks a member `"ready"`, gather all ready members each tick.
+   * Instantiate `TaskAnalyzer` once per update cycle and call `balanceTasks` to set tasks for ready members.
+   * Keep bootstrapping logic for new recruits unchanged.
+
+5. **Testing**
+
+   * Run `npm run build` to ensure TypeScript compiles.
+   * Execute `npx jest` to run unit tests; fix any issues.
+
+This adds automated task analysis and dynamic assignment for Phase 2, aligning `boss.ts` with the spec.
