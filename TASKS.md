@@ -873,3 +873,36 @@ Write a task to update `src/services/allocator.ts` to update the
 `MemoryAllocator` method `updateReserved` method to use this algorithm
 for scanning the processes running on each worker to determine whether
 any untracked processes are running.
+
+## Enhance New Gang Management Script: Phase 1
+
+1. Extend `src/gang/boss.ts`:
+
+   * Import the new threshold table and define:
+
+     ```ts
+     interface Thresholds { trainLevel: number; ascendMult: number; }
+     const thresholdsByCount: Record<number, Thresholds> = {
+         3: {trainLevel: 100, ascendMult: 0.05},
+         6: {trainLevel: 500, ascendMult: 0.10},
+         9: {trainLevel: 2000, ascendMult: 0.15},
+         12: {trainLevel: 10000, ascendMult: 0.2},
+     };
+     function getThresholds(n: number): Thresholds { /* select highest key ≤ n */ }
+     ```
+   * Track a `MemberState` map keyed by member name (`"bootstrapping"` or `"ready"`).
+
+2. In the main loop (one tick per `await ns.gang.nextUpdate()`):
+
+   * For each recruited member in `"bootstrapping"` state:
+
+     * Assign the configured `trainingTask`.
+     * Check `ns.gang.getAscensionResult(name)`; when the largest stat gain ≥ `ascendMult`, call `ns.gang.ascendMember(name)` and set state to `"ready"`.
+     * Continue cycling training/ascend until threshold met.
+   * Members marked `"ready"` keep running the `trainingTask` (for now).
+
+3. Persist state across ticks with a simple object; initialize new members’ state to `"bootstrapping"`.
+
+4. Verify typings and style with `npm run build` and `npx jest` after implementation.
+
+This completes Phase 1 by automatically ascending recruits until their multipliers meet dynamic thresholds derived from gang size.
