@@ -193,3 +193,36 @@ formulas API available. Let's add a fallback mode where we make a
 crude approximation of using the formulas API to determine how much
 money an upgrade will increase our earning power by using the
 multipliers from `ns.getHacknetMultipliers()`.
+
+* Gang
+
+
+** Boss Improvements
+
+*** ROI Calculation Sanity
+
+Change ROI to check how long total money earning velocity to repay
+cost.
+
+*** Change thresholdsByCount usage
+
+Interpolate between values instead of only using breakpoints so
+ramping is slower instead of sudden massive training sequences.
+
+
+*** Ascension Threshold should be per user
+
+The current method doesn't help newer users catch up to older ones
+with high multipliers except when the high-level ones hit a breakpoint
+where they no longer need to train at all.
+
+This is partially because the amount of time we should train a member
+is actually relative to their level. Also, I think my intuition was
+right that the ascension multiplier threshold needs to go down as our
+total multiplier gets higher. It looks like the ~AscensionResult~
+specifies the increase as a percent increase of our current
+multiplier, so i.e. at an ~ascMult~ = 21.5, ascending and achieving a
+new ~ascMult~ of 22.5 is calculated as only a 1.04 ~ascResult~
+
+Whereas at lower levels a change from ~ascmult~ 1 to 2 is a
+~ascResult~ of 2 because it's doubling.
