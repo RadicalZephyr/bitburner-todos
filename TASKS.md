@@ -1069,3 +1069,31 @@ This adds automated task analysis and dynamic assignment for Phase 2, aligning
 
    * Add unit tests for ROI calculation and profile-based training selection in `src/gang/__tests__/` using Jest.
    * Run `npm run build` and `npx jest` to verify successful compilation and test pass.
+
+
+### Code Comments
+
+1. Store `velocityThreshold` in `thresholdsByCount`
+
+Instead of coming from the CONFIG this velocity threshold should come
+from the `thresholdsByCount` record.
+
+2. Create new `velocity` method on `StatTracker` (`src/util/stat-tracker.ts`)
+
+Instead of pulling out the details of the `StatTracker`s history and
+reimplementing the velocity calculation let's instead add a method to
+expose the velocity calculation of any stat by name on `StatTracker`
+as a new method `StatTracker.velocity(stat: keyof PickByType<Type, number>): number`.
+
+
+3. Compute ROI more reasonably
+
+Computing the ROI in this way is non-sensical. The gain rate being
+calculated is actually a percent increase to a particular skill level
+and the relation to money earning capacity is extremely indirect and
+depends on what task the member might be assigned to. Let's remove the
+ROI calculation based on stat increases and instead we'll keep a
+`StatTracker<MoneySource>` which we'll update from
+`ns.getMoneySources().sinceInstall`. We'll use this stat tracker to
+compute our total earning velocity to determine how long it will take
+us to earn back the money for the upgrade.
