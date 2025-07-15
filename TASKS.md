@@ -838,3 +838,38 @@ by itself and by it's one service dependency the Discovery service
 (`src/services/discover.ts`). We need to add a message to the
 `MemoryClient` to register an "after the fact" allocation. Write a
 detailed task to add this new message and appropriate handling for it.
+
+## Fix "reserved" RAM tracking
+
+Currently, reserved RAM is updated by checking if there is a
+difference between the actual used RAM on the worker and the amount of
+allocated RAM. However, for a lot of reasons, allocated RAM is not
+necessarily in use so we need to make this calculation more
+sophisticated.
+
+We will instead use a new process scanning algorithm to differentiate
+between scripts that are running in allocated RAM and "foreign RAM",
+i.e. scripts that weren't registered with the allocator.
+
+```ts
+const procs = ns.ps(host);
+let allocRam = 0n;
+let foreignRam = 0n;
+for (const p of procs) {
+  if (hasAllocTag(p)) allocRam += toFixed(p.ramUsage);
+  else if (isRegistered(pid)) allocRam += toFixed(p.ramUsage); // core services
+  else foreignRam += toFixed(p.ramUsage);
+}
+```
+
+The `hasAllocTag` function will look at the script's arguments for the
+`TAG_ARG` (`src/services/client/memory_tag.ts`).
+
+The `isRegistered` function will look in the `MemoryAllocator`s
+allocations to see if there is an existing `Allocation` or
+`AllocationClaim` with the scripts `pid`.
+
+Write a task to update `src/services/allocator.ts` to update the
+`MemoryAllocator` method `updateReserved` method to use this algorithm
+for scanning the processes running on each worker to determine whether
+any untracked processes are running.
