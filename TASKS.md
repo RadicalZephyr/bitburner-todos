@@ -977,3 +977,43 @@ This adds automated task analysis and dynamic assignment for Phase 2, aligning
 6. **Commit**
 
    * Follow the commit convention `[gang]` prefix and summarize the feature implementation.
+
+## Gang Manage - Original Phase 3
+
+1. **Update configuration**
+
+   * Modify `src/gang/config.ts` to include a `coolingTaskList` entry (default: `[]`).
+   * Ensure `maxWantedPenalty` remains configurable; update comments if needed.
+
+2. **Extend TaskAnalyzer**
+
+   * In `src/gang/task-analyzer.ts`, add logic to compute `coolingTaskList`.
+   * Identify tasks where `baseWanted` is negative or `wantedLevelGainRate` is smallest.\
+     Expose the sorted list as `bestCoolingTasks`.
+
+3. **Create WantedTaskBalancer**
+
+   * Add a new module (e.g., `src/gang/wanted-task-balancer.ts`) implementing the balancing logic.
+   * Fetch `GangGenInfo` each tick to obtain `wantedLevel`, `wantedLevelGainRate`, and `wantedPenalty`.
+   * Compare `wantedPenalty` to `CONFIG.maxWantedPenalty`.
+   * If the penalty exceeds the threshold, assign `assignCoolingCount` members to the best cooling task from `TaskAnalyzer`.\
+     Otherwise, reuse the Phase 2 `balanceTasks` split between respect and money tasks.
+   * Document the exported function with JSDoc.
+
+4. **Integrate into manager script**
+
+   * Update `src/gang/boss.ts` (or whichever manager file controls the lifecycle) to call `WantedTaskBalancer` after gathering ready members and refreshing `TaskAnalyzer`.
+   * Ensure the script waits on `ns.gang.nextUpdate()` as noted in `src/gang/AGENTS.md`.
+
+5. **Update spec**
+
+   * Synchronize `src/gang/GANG_MANAGER_SPEC.md` with any implementation details (task names, configuration defaults).
+   * Describe how `WantedTaskBalancer` uses `coolingTaskList`.
+
+6. **Testing**
+
+   * Run `npm run build` and `npx jest` to verify compilation and tests succeed.
+
+7. **Commit**
+
+   * Follow the commit convention `[gang]` prefix and summarize the feature implementation.
