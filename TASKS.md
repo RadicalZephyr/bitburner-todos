@@ -1021,9 +1021,13 @@ This adds automated task analysis and dynamic assignment for Phase 2, aligning
 ## Gang Manage - Phase 4
 
 1. **Role profile calculation**
-
-   * Add a module (e.g., `src/gang/role-profiles.ts`) that computes average weight vectors for each role using `ns.gang.getTaskStats()`.
-   * Store the weight vectors so other modules can query a profile by role name.
+   * Extend `src/gang/task-analyzer.ts` with a `roleProfiles()` method.
+   * Compute average weight vectors using `GangTaskStats` for tasks
+     grouped by role (`bootstrapping`, `respectGrind`, `moneyGrind`,
+     `warfare`, `cooling`).
+   * Refresh these profiles whenever task stats are refreshed.
+   * Export the resulting profile data so other modules can access it.
+   * Document this method with JSDoc.
 
 2. **TrainingFocusManager**
 
