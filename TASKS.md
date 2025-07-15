@@ -1040,9 +1040,13 @@ This adds automated task analysis and dynamic assignment for Phase 2, aligning
 
 3. **EquipmentManager**
 
-   * Scan each member using `ns.gang.getMemberInformation()` and list all equipment via `ns.gang.getEquipmentNames()`.
-   * For each item, retrieve stats with `ns.gang.getEquipmentStats()` and compute return-on-investment: `price / gainRate`.
-   * If ROI is below the configurable `maxROITime`, purchase the item with `ns.gang.purchaseEquipment()`.
+   1. Create `src/gang/equipment-manager.ts`.
+   2. Export a function `purchaseBestGear(ns, memberName, role)` that:
+
+      * Retrieves member info and equipment stats.
+      * Computes ROI = cost / gainRate (level/sec for training; money/sec for working).
+      * Buys equipment when ROI ≤ `CONFIG.maxROITime` for the role using `ns.gang.purchaseEquipment`.
+      * JSDoc-document the function.
 
 4. **Velocity-based ascension**
 
