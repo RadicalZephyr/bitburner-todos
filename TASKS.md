@@ -1052,7 +1052,7 @@ This adds automated task analysis and dynamic assignment for Phase 2, aligning
 
    1. Use `util/stat-tracker` to track per-member stat velocity.
    2. In the main gang manager (`src/gang/boss.ts` or successor), maintain a `StatTracker<GangMemberInfo>` per member.
-   3. After each tick, compute velocity; if it falls below `CONFIG.velThresh*` for that member count, call `ns.gang.ascendMember`.
+   3. After each tick, compute velocity; if it falls below `CONFIG.velocityThreshold*` for that member count, call `ns.gang.ascendMember`.
    4. Reset the tracker after ascension.
 
 5. **Integration & configuration**
