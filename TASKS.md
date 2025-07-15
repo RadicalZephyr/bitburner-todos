@@ -1017,3 +1017,39 @@ This adds automated task analysis and dynamic assignment for Phase 2, aligning
 7. **Commit**
 
    * Follow the commit convention `[gang]` prefix and summarize the feature implementation.
+
+## Gang Manage - Phase 4
+
+1. **Role profile calculation**
+
+   * Add a module (e.g., `src/gang/role-profiles.ts`) that computes average weight vectors for each role using `ns.gang.getTaskStats()`.
+   * Store the weight vectors so other modules can query a profile by role name.
+
+2. **TrainingFocusManager**
+
+   * Create a new component that, during bootstrapping/training phases, selects between `Train Hacking`, `Train Combat`, or `Train Charisma`.
+   * Compare each profile’s weight vector with a member’s current stats to determine the dominant skill area.
+   * Assign the corresponding training task with `ns.gang.setMemberTask()`.
+
+3. **EquipmentManager**
+
+   * Scan each member using `ns.gang.getMemberInformation()` and list all equipment via `ns.gang.getEquipmentNames()`.
+   * For each item, retrieve stats with `ns.gang.getEquipmentStats()` and compute return-on-investment: `price / gainRate`.
+   * If ROI is below the configurable `maxROITime`, purchase the item with `ns.gang.purchaseEquipment()`.
+
+4. **Velocity-based ascension**
+
+   * Extend the existing `StatTracker`/`MemberTracker` to record historical level data for each member.
+   * Calculate velocity as the rate of level increase in each relevant stat.
+   * When velocity drops below `velThresh[n]` (threshold per member count), call `ns.gang.ascendMember()` and reset the member’s trackers.
+
+5. **Integration & configuration**
+
+   * Update gang config files to include `maxROITime` and `velThresh` values.
+   * Ensure new managers run only once per gang tick (`await ns.gang.nextUpdate()`) per the contributor guide.
+   * Document the new modules in `GANG_MANAGER_SPEC.md` and provide JSDoc comments for all exported functions.
+
+6. **Testing**
+
+   * Add unit tests for ROI calculation and profile-based training selection in `src/gang/__tests__/` using Jest.
+   * Run `npm run build` and `npx jest` to verify successful compilation and test pass.
