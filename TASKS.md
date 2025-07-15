@@ -829,3 +829,12 @@ Let's create one RFD document for each major service:
 - Batch hacking (`src/batch/task_selector.ts`, `src/batch/monitor.tsx`, `src/batch/harvest.ts`, `src/batch/sow.ts`, `src/batch/till.ts`)
 
 - Service Startup/Bootstrapping (`src/start.ts`, `src/bootstrap.ts`, `src/services/bootstrap.ts`, `src/batch/bootstrap.ts`)
+
+## Implement new allocator message for registering an ex post facto allocation
+
+The Memory Allocator (`src/services/memory.tsx`,
+`src/services/allocator.ts`) doesn't have a way to track the RAM used
+by itself and by it's one service dependency the Discovery service
+(`src/services/discover.ts`). We need to add a message to the
+`MemoryClient` to register an "after the fact" allocation. Write a
+detailed task to add this new message and appropriate handling for it.
