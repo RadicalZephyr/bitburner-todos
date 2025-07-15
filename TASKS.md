@@ -1031,9 +1031,12 @@ This adds automated task analysis and dynamic assignment for Phase 2, aligning
 
 2. **TrainingFocusManager**
 
-   * Create a new component that, during bootstrapping/training phases, selects between `Train Hacking`, `Train Combat`, or `Train Charisma`.
-   * Compare each profile’s weight vector with a member’s current stats to determine the dominant skill area.
-   * Assign the corresponding training task with `ns.gang.setMemberTask()`.
+   1. Create `src/gang/training-focus-manager.ts`.
+   2. Export a function `assignTrainingTasks(ns, memberNames, profiles)` that:
+      * For each training-phase member, compares the member’s current stats to role profiles.
+      * Chooses `Train Hacking`, `Train Combat`, or `Train Charisma` according to the closest profile weight.
+      * Sets the task with `ns.gang.setMemberTask`.
+      * Include JSDoc comments.
 
 3. **EquipmentManager**
 
