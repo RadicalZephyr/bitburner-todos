@@ -1057,9 +1057,13 @@ This adds automated task analysis and dynamic assignment for Phase 2, aligning
 
 5. **Integration & configuration**
 
-   * Update gang config files to include `maxROITime` and `velThresh` values.
-   * Ensure new managers run only once per gang tick (`await ns.gang.nextUpdate()`) per the contributor guide.
-   * Document the new modules in `GANG_MANAGER_SPEC.md` and provide JSDoc comments for all exported functions.
+   1. Modify `src/gang/boss.ts` to:
+
+      * Initialize `TrainingFocusManager` and `EquipmentManager`.
+      * During each update tick, after recruiting and analyzing tasks, invoke the training focus assignment and equipment purchase for members in training phases.
+      * Ensure the loop awaits `ns.gang.nextUpdate()` exactly once per tick as required.
+   2. Refresh role profiles using the extended `TaskAnalyzer`.
+   3. Document the new modules in `GANG_MANAGER_SPEC.md` and provide JSDoc comments for all exported functions.
 
 6. **Testing**
 
