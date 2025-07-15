@@ -813,3 +813,19 @@ Then once every five seconds the script will release one 8GB chunk
 from the `TransferableAllocation` using `MemoryClient.releaseChunks`,
 wait for 1 second and verify that the `GrowableAllocation` has
 increased by one chunk.
+
+## Documenting Design Decisions
+
+I want to start documenting some of the design decisions we've
+made. Let's create a new directory `rfd` and populate it with
+documents describing all of the major services we already have.
+
+Let's create one RFD document for each major service:
+
+- Discovery (`src/services/discover.ts`)
+- Memory Allocator (`src/services/memory.tsx`, `src/services/allocator.ts`, `src/services/launch.ts`)
+- Port Allocator (`src/services/port.tsx`)
+
+- Batch hacking (`src/batch/task_selector.ts`, `src/batch/monitor.tsx`, `src/batch/harvest.ts`, `src/batch/sow.ts`, `src/batch/till.ts`)
+
+- Service Startup/Bootstrapping (`src/start.ts`, `src/bootstrap.ts`, `src/services/bootstrap.ts`, `src/batch/bootstrap.ts`)
