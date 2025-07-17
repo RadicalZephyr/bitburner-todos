@@ -199,18 +199,13 @@ multipliers from `ns.getHacknetMultipliers()`.
 
 ** Boss Improvements
 
-*** ROI Calculation Sanity
-
-Change ROI to check how long total money earning velocity to repay
-cost.
-
 *** Change thresholdsByCount usage
 
 Interpolate between values instead of only using breakpoints so
 ramping is slower instead of sudden massive training sequences.
 
 
-*** Ascension Threshold should be per user
+*** Ascension Threshold should be per member based on ascMult
 
 The current method doesn't help newer users catch up to older ones
 with high multipliers except when the high-level ones hit a breakpoint
