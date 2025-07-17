@@ -1097,3 +1097,52 @@ ROI calculation based on stat increases and instead we'll keep a
 `ns.getMoneySources().sinceInstall`. We'll use this stat tracker to
 compute our total earning velocity to determine how long it will take
 us to earn back the money for the upgrade.
+
+
+## Gang Management : Phase 5 - Territory Management & Full Orchestration
+
+1. **Create a TerritoryManager**
+
+   * New file `src/gang/territory-manager.ts`.
+   * Class updates every 4 calls to `ns.gang.nextUpdate()`.
+   * Fetch `ns.gang.getGangInformation()` and compute a `territoryBonus` function of `info.territory`.
+   * Expose a method to provide the current bonus to `TaskAnalyzer.refresh()` so that task yields can include territory effects.
+
+2. **Handle Death & Re-Recruit**
+
+   * Update `src/gang/boss.ts` (or create a new orchestrator module) to detect when a gang member no longer appears in `ns.gang.getMemberNames()` or has an empty task.
+   * When a member death is detected and `ns.gang.canRecruitMember()` is `true`, recruit a new member using the name pool already defined in `boss.ts`.
+   * Ensure the new recruit enters the existing bootstrapping workflow.
+
+3. **Full State Machine**
+
+   * Expand the member state logic in `boss.ts` to implement the diagram in the spec:
+
+     ```
+     recruited → bootstrapping ↔ training ↔ ascending
+                        ↓
+                      ready
+                ↙       ↓       ↘
+        respectGrind moneyGrind territoryWarfare
+                ↖       ↓       ↗
+                     cooling
+     ```
+   * Track each member’s state and transition them based on thresholds (ascension multipliers, velocity thresholds, wanted penalty, territory needs, etc.).
+   * Integrate the new TerritoryManager so members enter the `territoryWarfare` role when additional territory is needed.
+
+4. **Dynamic Task Splitting**
+
+   * Replace the static `wantedTaskBalancer` call with a new function that distributes members among respect, money, cooling, and warfare tasks.
+   * Factor in:
+
+     * `respectForNextRecruit - respect`
+     * Available money for equipment and ascensions
+     * `GangGenInfo.wantedPenalty`
+     * Current `territory` percentage and clash probabilities from `ns.gang.getChanceToWinClash()`.
+   * Adjust the number of members assigned to each role accordingly, then assign the best task for that role using `TaskAnalyzer`.
+
+5. **Documentation & Tests**
+
+   * Update `src/gang/GANG_MANAGER_SPEC.md` to reflect the implemented design.
+   * Add unit tests (in `src/gang/__tests__`) covering `territoryBonus` computation and the new distribution logic.
+   * Run `npm run build` and `npx jest` to ensure everything compiles and tests pass.
