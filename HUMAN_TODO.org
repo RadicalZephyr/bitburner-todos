@@ -221,3 +221,24 @@ new ~ascMult~ of 22.5 is calculated as only a 1.04 ~ascResult~
 
 Whereas at lower levels a change from ~ascmult~ 1 to 2 is a
 ~ascResult~ of 2 because it's doubling.
+
+*** Add more names to list so we can lose members and still recruit new ones
+
+- Rami
+- Xavier
+- Fractal
+- Lir
+- Nymthus
+- Echo
+- Blizz
+- Big D
+- Mist
+- Thorn
+- Dusk
+- Ash
+- Pine
+- Wip
+- Qip
+- Chip
+- Stump
+- Tarot
