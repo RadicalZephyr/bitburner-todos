@@ -186,16 +186,7 @@ Use `ns.hacknet.getNodeStats()` to produce a CSV table of data
 regarding basic hacknet production at given levels.
 
 
-** Add approximation API for Hacknet production
-
-The `src/buy-hacknet.ts` script is not usable if we don't have the
-formulas API available. Let's add a fallback mode where we make a
-crude approximation of using the formulas API to determine how much
-money an upgrade will increase our earning power by using the
-multipliers from `ns.getHacknetMultipliers()`.
-
 * Gang
-
 
 ** Boss Improvements
 
