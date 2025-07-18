@@ -1,3 +1,16 @@
+* Startup/Bootstrap
+
+** Add Karma to the bootstrap
+
+Run Karma script on n00dles during gang bootstrap.
+
+** Extend Karma to launch gang management script
+
+Now that I'm probably not going to do any more runs of Bitnode 2,
+we'll need to grind for negative karma to be able to create a gang,
+and having the karma script launch the manager seems like an obvious
+way to do it.
+
 * Batch Hacking
 
 ** General Improvement
