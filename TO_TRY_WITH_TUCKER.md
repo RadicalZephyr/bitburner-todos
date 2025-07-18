@@ -6,6 +6,10 @@ Suggest a refactoring to make it more readable and testable.
 
 More of a demo task TBH, but it could have interesting results.
 
+## Meta Task for coming up with interesting tasks
+
+Try to construct a meta-prompt telling it to come up with off-the-wall
+ideas for tasks to ask Codex to do.
 
 ## Refactoring harvest main function into more modular (and testable?) chunks
 
