@@ -49,3 +49,9 @@ coherent functions to make it cleaner and easier to read.
 ## Refactoring parameter lists into options objects
 
 I'm pretty confident it can do it, so not super interesting.
+
+## Design Discussion about fixing oversize harvest batches
+
+Start with a design discussion with Codex, develop a phase plan for
+implementing the proposed changes, then try to get it to follow the
+plan.
