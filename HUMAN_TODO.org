@@ -133,7 +133,7 @@ profitable targets much much faster.
 
 OR
 
- - Support growing allocations
+ - Support growing allocations [completed!]
 
 In early bit-nodes every time you acquire a new port-cracking program,
 the increased memory is greedily assigned to a task that is not
