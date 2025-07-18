@@ -27,6 +27,15 @@ Add the `allocation-id` flag to every script and make it fully
 standardized, and remove the option from the `launch` script to
 specify a different allocation flag.
 
+## Trim RAM Bloat from task selector and monitor file
+
+Explain how each `ns` function in the file or any imported file costs
+RAM whether it's used or not. Ask it to examine the imports of the
+task selector and monitor files and ensure that every RAM function the
+script will be charged for is actually being called. If there are
+unused functions, break up any imported files so that the minimum
+necessary number of `ns` calls will be attributed to each script.
+
 ## New Launch Service
 
 See HUMAN_TODO.org for details.
