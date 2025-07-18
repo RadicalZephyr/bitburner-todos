@@ -11,6 +11,34 @@ we'll need to grind for negative karma to be able to create a gang,
 and having the karma script launch the manager seems like an obvious
 way to do it.
 
+* Services
+
+** Buy Servers
+
+Need to integrate it with the rest of the system, particularly the
+Memory Allocator and Task Selector. I guess Discovery could be part of
+it too?
+
+A lot of the grief of it could be mitigated by just not changing the
+name...
+
+** Memory Allocator
+
+** Make Buy Servers script into a daemon
+
+Once the system can handle new hosts gracefully we should turn a
+version of the buy-servers script into a long-running service daemon
+that basically upgrades servers as the money comes in. Probably one by
+one instead of in a whole batch.
+
+** Fix bug in reserved changing
+
+Right now, when we run scripts on a server with "reserved" memory
+(really should be "in-use" memory), it is changing the amount of
+reserved memory. This could be the source of the memory overcommit
+because then it's losing track of the fact that this memory is in use.
+
+
 * Batch Hacking
 
 ** General Improvement
@@ -44,19 +72,6 @@ reader.
 
 Cancel and restart weakening jobs once our hacking skill rises enough
 that it becomes at least 10% faster to do so.
-
-* Utility Scripts
-
-** Buy Servers
-
-Need to integrate it with the rest of the system, particularly the
-Memory Allocator and Task Selector. I guess Discovery could be part of
-it too?
-
-A lot of the grief of it could be mitigated by just not changing the
-name...
-
-* Services
 
 ** Task Selector
 
@@ -145,27 +160,12 @@ Maybe we want to allocate to tilling and sowing first, but try and
 time it so that they will be ready by the time we have the level to
 target that host?
 
-** Memory Allocator
-
-** Make Buy Servers script into a daemon
-
-Once the system can handle new hosts gracefully we should turn a
-version of the buy-servers script into a long-running service daemon
-that basically upgrades servers as the money comes in. Probably one by
-one instead of in a whole batch.
-
-** Fix bug in reserved changing
-
-Right now, when we run scripts on a server with "reserved" memory
-(really should be "in-use" memory), it is changing the amount of
-reserved memory. This could be the source of the memory overcommit
-because then it's losing track of the fact that this memory is in use.
 
 
 * Stocks
 
 
-* Utility
+* Singularity
 
 ** New Script for Collecting Augments
 
