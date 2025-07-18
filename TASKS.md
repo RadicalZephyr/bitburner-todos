@@ -1146,3 +1146,29 @@ us to earn back the money for the upgrade.
    * Update `src/gang/GANG_MANAGER_SPEC.md` to reflect the implemented design.
    * Add unit tests (in `src/gang/__tests__`) covering `territoryBonus` computation and the new distribution logic.
    * Run `npm run build` and `npx jest` to ensure everything compiles and tests pass.
+
+
+## Task Selector Failure Tracking and Back-off
+
+**Issue**
+
+When a task launch fails in `TaskSelector`, the failure is only logged
+and the target is immediately re‑queued. There is no counter or delay
+to prevent repeated attempts, so the selector keeps trying to launch
+the same task in quick succession. This is visible in
+`checkLaunchedTasks()` where a failed launch only triggers
+`pushTarget` without any tracking or backoff.
+
+Likewise, the `launch*` methods only handle successful launches and
+ignore failures.
+
+ As a result, the selector can thrash when memory or other conditions
+ prevent tasks from launching.
+
+ 1. Update `src/batch/config.ts` with new options such as `launchFailLimit` and `launchFailBackoffMs`.
+ 2. Update `src/batch/task_selector.ts`: In `TaskSelector`, add a map keyed by host to track consecutive launch failures and the timestamp of the next allowed attempt.
+ 3. Modify `launchTill`, `launchSow`, and `launchHarvest` so that when `launch()` returns `null` or zero PIDs, the failure count for that host is incremented and `nextAttempt` is set using an exponential backoff (`launchFailBackoffMs` × 2^(failure count - 1)).
+ 4. Before launching a task in `launchPendingTasks`, skip hosts whose `nextAttempt` is in the future.
+ 5. Modify `checkLaunchedTasks` so that when a heartbeat timeout is exceeded for a launched task the failure count for that host is incremented and set `nextAttempt` using the same exponential backoff.
+ 6. Reset the failure counter on a successful launch or when a heartbeat is received.
+ 7. Document the new configuration options and behavior in any relevant README sections.
