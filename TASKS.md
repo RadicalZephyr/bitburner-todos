@@ -1172,3 +1172,21 @@ ignore failures.
  5. Modify `checkLaunchedTasks` so that when a heartbeat timeout is exceeded for a launched task the failure count for that host is incremented and set `nextAttempt` using the same exponential backoff.
  6. Reset the failure counter on a successful launch or when a heartbeat is received.
  7. Document the new configuration options and behavior in any relevant README sections.
+
+
+## New Updater Service
+
+Read `.github/workflows/release.yml`. I've just added a step to the workflow to generate a `VERSION.json` file containing the details of the current release git revision sha and date in both human readable and machine parseable format.
+
+Including this file in the release is intended to make it easy to implement an "updater" service that periodically uses `ns.wget` to download the `VERSION.json` from the github latest-files branch of my repository from this url `"https://github.com/RadicalZephyr/bitburner-scripts/raw/refs/heads/latest-files/VERSION.json"` and compares the `epoch` fields to determine which one is newer, and compares the `sha` fields to make sure that this actually represents a new release.
+
+This updater service script should be in a new script `src/services/updater.ts` and it should be started by the services bootstrap script (`src/services/bootstrap.ts`) after the memory allocator service is started.
+
+
+If there is no `VERSION.json` on the "home" server then the updater script should immediately exit.
+
+### Extended version with directions on how to implement it's
+
+We should add a new utility function called `every` to `src/util/time.ts` that is a generator function that takes an interval time in milliseconds, and returns a Promise that will resolve the next time that interval triggers.
+
+The main loop of the updater service will use this `every` function to `await` every interval and then download the version file and check it against our current version file.  When the updater script detects that a newer version of the scripts are available from github, it should prompt the user with `ns.prompt` that a newer version of the scripts has been published, and ask if they wish to download them now.
