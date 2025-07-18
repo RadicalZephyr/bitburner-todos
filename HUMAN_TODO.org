@@ -38,6 +38,17 @@ version of the buy-servers script into a long-running service daemon
 that basically upgrades servers as the money comes in. Probably one by
 one instead of in a whole batch.
 
+** Script launcher Service
+
+Instead of having every script that wants to launch something bear the
+RAM cost of using the `launch` script, create an actual `launch`
+service and a client for using it.
+
+Create a new CLI usage script for parsing command line arguments for
+the script to be launched that uses the new `services/client/launch`.
+
+
+
 * Batch Hacking
 
 ** General Improvement
