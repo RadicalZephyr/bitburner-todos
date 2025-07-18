@@ -1,5 +1,11 @@
 # Ideas of tasks to try with Tucker
 
+## Find the most file with the most complex code
+
+Suggest a refactoring to make it more readable and testable.
+
+More of a demo task TBH, but it could have interesting results.
+
 
 ## Refactoring harvest main function into more modular (and testable?) chunks
 
