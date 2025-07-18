@@ -16,6 +16,21 @@ More of a demo task TBH, but it could have interesting results.
 Try to construct a meta-prompt telling it to come up with off-the-wall
 ideas for tasks to ask Codex to do.
 
+## Add MEMORY_TAG to every scripts flags array
+
+Make it so every script that has a main function includes the
+`MEMORY_TAG` flag so the new launch service can tag it.
+
+## Add allocation ID flag to every script
+
+Add the `allocation-id` flag to every script and make it fully
+standardized, and remove the option from the `launch` script to
+specify a different allocation flag.
+
+## New Launch Service
+
+See HUMAN_TODO.org for details.
+
 ## Refactoring harvest main function into more modular (and testable?) chunks
 
 It's gotten very long and quite intricate, we could ask Codex to try
