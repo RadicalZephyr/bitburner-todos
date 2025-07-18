@@ -13,16 +13,27 @@ way to do it.
 
 * Services
 
-** Fix bug in reserved changing
+** Bugs
+
+*** Fix bug in reserved changing
 
 Right now, when we run scripts on a server with "reserved" memory
 (really should be "in-use" memory), it is changing the amount of
 reserved memory. This could be the source of the memory overcommit
 because then it's losing track of the fact that this memory is in use.
 
-** Memory Allocator
 
-** Make Buy Servers script into a daemon
+** Improvements
+
+*** Discovery
+
+*** Port Allocator
+
+*** Memory Allocator
+
+** New Services
+
+*** Make Buy Servers script into a daemon
 
 Need to integrate it with the rest of the system, particularly the
 Memory Allocator and Task Selector. I guess Discovery could be part of
@@ -36,7 +47,7 @@ version of the buy-servers script into a long-running service daemon
 that basically upgrades servers as the money comes in. Probably one by
 one instead of in a whole batch.
 
-** Script launcher Service
+*** Script launcher Service
 
 Instead of having every script that wants to launch something bear the
 RAM cost of using the `launch` script, create an actual `launch`
