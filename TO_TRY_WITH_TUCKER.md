@@ -1,5 +1,10 @@
 # Ideas of tasks to try with Tucker
 
+## Fill out the README with better "how to use this repo" instructions
+
+Include fixing the alias for "bootstrapping" the repo by renaming the
+bootstrap script that is built by Github Actions.
+
 ## Find the most file with the most complex code
 
 Suggest a refactoring to make it more readable and testable.
