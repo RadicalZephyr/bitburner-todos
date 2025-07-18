@@ -31,6 +31,26 @@ because then it's losing track of the fact that this memory is in use.
 
 *** Memory Allocator
 
+**** Add memory pools concept
+
+Really only need two pools conceptually (~hasCores~ and ~noCores~).
+
+However, for the batch hacking system it would be ideal if we had a
+pool for each of the 3 hacking lifecyle phases (till, sow, and
+harvest).
+
+Till and sow should ideally be on home if it's large enough, and
+servers with low total RAM if not (because their batches are smaller).
+
+Memory pooling is something that should change dynamically based on a
+bunch of factors like:
+
+- How many hosts are in each pending queue
+- How much free RAM is available
+- How large the chunks of free RAM are
+- How large the total RAM on most servers is
+- Whether we have more than one core on home
+
 ** New Services
 
 *** Make Buy Servers script into a daemon
