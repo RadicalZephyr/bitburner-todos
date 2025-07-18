@@ -13,6 +13,13 @@ way to do it.
 
 * Services
 
+** Fix bug in reserved changing
+
+Right now, when we run scripts on a server with "reserved" memory
+(really should be "in-use" memory), it is changing the amount of
+reserved memory. This could be the source of the memory overcommit
+because then it's losing track of the fact that this memory is in use.
+
 ** Buy Servers
 
 Need to integrate it with the rest of the system, particularly the
@@ -30,14 +37,6 @@ Once the system can handle new hosts gracefully we should turn a
 version of the buy-servers script into a long-running service daemon
 that basically upgrades servers as the money comes in. Probably one by
 one instead of in a whole batch.
-
-** Fix bug in reserved changing
-
-Right now, when we run scripts on a server with "reserved" memory
-(really should be "in-use" memory), it is changing the amount of
-reserved memory. This could be the source of the memory overcommit
-because then it's losing track of the fact that this memory is in use.
-
 
 * Batch Hacking
 
