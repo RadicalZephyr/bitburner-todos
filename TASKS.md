@@ -1208,3 +1208,39 @@ The main loop of the updater service will use this `every` function to `await` e
    * Retain any existing options and behavior (help handling, etc.).
 3. Verify the three batch helper scripts (`src/batch/g.ts`, `src/batch/h.ts`, `src/batch/w.ts`) continue to use `MEM_TAG_FLAGS` unchanged.
 4. Run `npm run build` and `npx jest` to confirm no type or test errors.
+
+
+## Create static RAM cost
+
+1. **Add CLI skeleton**
+
+   * Create `tools/ram-cost.js`.
+   * Read the target filename from `process.argv[2]`; display usage info if none is provided.
+
+2. **Parse NetScriptDefinitions.d.ts**
+
+   * Load `NetScriptDefinitions.d.ts` from the repo root.
+   * Extract every function in the `NS` interface, including nested interfaces accessed through properties like `hacknet` or `gang`.
+   * Capture each function’s RAM cost from the `@remarks RAM cost:` annotation and store it under a key such as `hacknet.purchaseNode`.
+
+3. **Collect script dependencies**
+
+   * Starting from the user-specified file, read the file contents and use a regex similar to the one in `src/util/dependencies.ts` to find `import` statements.
+   * Resolve import paths relative to the current file, append `.js` or `.ts` if needed, and recursively gather all dependencies while avoiding duplicates.
+
+4. **Scan files for API usage**
+
+   * For each file in the transitive dependency set, search its text for occurrences of the extracted API names (e.g., `ns.hack`, `ns.hacknet.purchaseNode`).
+   * Record which API functions were found, ignoring duplicates.
+
+5. **Sum and report RAM cost**
+
+   * Look up the RAM cost for each detected API and sum them.
+   * Print a list of the matched APIs with their individual costs and show the total RAM cost in gigabytes.
+
+6. **Quality checks**
+
+   * Run `npm run build` and `npx jest` to ensure the repo still builds and tests pass.
+   * Commit the new script with a message prefixed by `[tools]`.
+
+This utility will allow developers to quickly estimate a script’s RAM requirements based on the same simplistic search method described in `src/AGENTS.md`.
