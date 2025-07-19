@@ -1190,3 +1190,21 @@ If there is no `VERSION.json` on the "home" server then the updater script shoul
 We should add a new utility function called `every` to `src/util/time.ts` that is a generator function that takes an interval time in milliseconds, and returns a Promise that will resolve the next time that interval triggers.
 
 The main loop of the updater service will use this `every` function to `await` every interval and then download the version file and check it against our current version file.  When the updater script detects that a newer version of the scripts are available from github, it should prompt the user with `ns.prompt` that a newer version of the scripts has been published, and ask if they wish to download them now.
+
+## Add Mem Tag to all script mains
+
+1. Search the entire `src/` directory for files containing `export async function main`.
+2. For each file:
+
+   * Import `MEM_TAG_FLAGS` from `services/client/memory_tag`.
+   * Ensure `ns.flags()` is called.
+
+     * If the script already calls `ns.flags([...])`, append `...MEM_TAG_FLAGS` to the array of flags.
+     * If it does not call `ns.flags`, add a call at the start of `main`:
+
+       ```ts
+       const flags = ns.flags(MEM_TAG_FLAGS);
+       ```
+   * Retain any existing options and behavior (help handling, etc.).
+3. Verify the three batch helper scripts (`src/batch/g.ts`, `src/batch/h.ts`, `src/batch/w.ts`) continue to use `MEM_TAG_FLAGS` unchanged.
+4. Run `npm run build` and `npx jest` to confirm no type or test errors.
