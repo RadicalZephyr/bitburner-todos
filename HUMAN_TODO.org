@@ -158,6 +158,23 @@ means getting money faster which means getting to more port crackers
 and more RAM faster, which means we can till and sow other more
 profitable targets much much faster.
 
+**** Alternative
+
+With better information about how much each harvest script is expected
+to earn, we can gate launching new harvest tasks if they would earn
+less than 1% of the amount we are already earning. This would prevent
+spawning new tasks that are only going to provide an extremely
+marginal increase in income.
+
+Ideally, we would use improve expected value calculations (once they
+are more accurate).
+
+If we query the PID of the harvest script for the
+~ns.getRunningScript(pid).onlineMoneyMade~) we could get the actual
+value generated, however this information will be extremely delayed as
+it takes a while to spawn the entire batch pipeline.
+
+
 *** Dynamically choose scripts better
 
  - Kill and restart tasks that are under-resourced
