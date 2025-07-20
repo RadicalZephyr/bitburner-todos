@@ -1244,3 +1244,32 @@ The main loop of the updater service will use this `every` function to `await` e
    * Commit the new script with a message prefixed by `[tools]`.
 
 This utility will allow developers to quickly estimate a script’s RAM requirements based on the same simplistic search method described in `src/AGENTS.md`.
+
+
+## Improve Max Hacking Percent Calculation
+
+I think there is a lot of room for improvement in how we calculate how
+valuable a target is.
+
+Read `src/batch/expected_value.ts`, `src/batch/harvest.ts`, and
+`src/batch/task_selector.ts`. Currently, when we calculate the
+`expectedValuePerRamSecond` we calculate it based on hacking with only
+one thread. We also don't take into account how many batches can end
+per second. These deficiencies cause us to undervalue how profitable a
+target could be.
+
+On the other hand, we also don't consider whether we have enough space
+to spawn a fully saturated pipeline of batches, both in terms of total
+free RAM and in how fragmented that RAM is. These deficiencies cause
+us to overvalue some targets that we can't actually effectively hack
+at full capacity.
+
+I think we could improve the task selector substantially if we
+incorporate the above improvements into our calculation of how
+valuable a task is to hack.
+
+In order to implement these improvements we need to enhance the
+information that the MemoryAllocator returns to clients from the
+`getFreeRam` request. In addition to the total amount of free RAM, we
+should include a list of the contiguous free chunks of RAM and their
+sizes.
