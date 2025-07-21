@@ -1273,3 +1273,20 @@ information that the MemoryAllocator returns to clients from the
 `getFreeRam` request. In addition to the total amount of free RAM, we
 should include a list of the contiguous free chunks of RAM and their
 sizes.
+
+
+## Add contributor guides to subdirectories
+
+1. Create new `AGENTS.md` files for the following directories:
+
+   * `src/services/`
+   * `src/util/`
+   * `src/corp/`
+   * `src/contracts/`
+2. For each file, summarize any recurring patterns:
+
+   * **Util:** note that helpers typically export small functions, and use as few NS APIs as possible to save RAM.
+   * **Services:** explain daemon–client pattern, mention `DISCOVER_SPEC.md` and the standard port-based messaging protocol.
+   * **Corp:** link to relevant docs in `docs/corporation/` and highlight the use of `ns.corporation` APIs.
+   * **Contracts:** describe the convention of exporting a `solve` function and embedding puzzle text; mention that JSDoc is not needed here. Point out how `src/fetch-contracts.js` looks up and runs contract scripts by contract name.
+3. Keep each new guide concise (2–3 short paragraphs).
