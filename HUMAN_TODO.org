@@ -250,6 +250,16 @@ to create.
 
 * Singularity
 
+** After-install script
+
+If we have the Cashroot starterkit (+$1m)
+
+ - Buy ToR Router
+ - Go to Volhaven
+ - Study Algorithms
+ - After hacking level stabilizes (rate slows down to <1 or
+   something), run ~start.ts~ script
+
 ** New Script for Collecting Augments
 
 Basically, a script that loops, looks at the page for a "Faction
