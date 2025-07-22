@@ -1290,3 +1290,56 @@ sizes.
    * **Corp:** link to relevant docs in `docs/corporation/` and highlight the use of `ns.corporation` APIs.
    * **Contracts:** describe the convention of exporting a `solve` function and embedding puzzle text; mention that JSDoc is not needed here. Point out how `src/fetch-contracts.js` looks up and runs contract scripts by contract name.
 3. Keep each new guide concise (2–3 short paragraphs).
+
+
+## Create a Launch Service
+
+1. **Choose port numbers**
+
+   * Pick two unused ports (e.g. `17` and `18`) and define `LAUNCH_PORT` and `LAUNCH_RESPONSE_PORT`.
+
+2. **Typed client API**
+
+   * Add `src/services/client/launch.ts`.
+   * Define `MessageType` (initially just `Launch`).
+   * Create `LaunchRequest` containing:
+
+     ```ts
+     interface LaunchRequest {
+       script: string;
+       options: LaunchRunOptions;       // includes threads, ramOverride, etc.
+       args: ScriptArg[];
+     }
+     ```
+   * Define `LaunchResponse` with `{ allocationId: number; hosts: HostAllocation[]; pids: number[] }`.
+   * Implement `LaunchClient` extending `Client<MessageType, LaunchRequest, LaunchResponse | null>`.
+
+     * Provide `async launch(script: string, options: LaunchRunOptions, ...args: ScriptArg[]): Promise<{ allocation: TransferableAllocation; pids: number[] } | null>` that wraps the port messaging and converts the response into a `TransferableAllocation`.
+
+3. **Daemon implementation**
+
+   * Create `src/services/launcher.ts` (or similar).
+   * Move the existing `launch(ns, payload.script, payload.options, ...payload.args)` function into the new module.
+   * In `main(ns)`:
+
+     * Parse `MEM_TAG_FLAGS`, register this daemon’s RAM with `MemoryClient`.
+     * Use `readLoop` to process messages.
+   * For each `Launch` message:
+
+     * Validate the payload.
+     * Call the existing `launch(ns, payload.script, payload.options, ...payload.args)`.
+     * Send back a `LaunchResponse` with allocation details and spawned PIDs (or `null` on failure).
+
+4. **Update bootstrap and tests**
+
+   * Start this new daemon from `src/services/bootstrap.ts`.
+   * Add a simple test under `src/services/tests` that spins up a dummy memory test service and verifies a `LaunchClient.launch` call results in the expected PID array and allocation id.
+
+5. **Update client code**
+
+   * Update all client code using the old `launch` API to use the new `LaunchClient`.
+   * Remove the old `src/services/launch.ts` module.
+
+6. **Documentation**
+
+   * Document the new service in `README.md` or relevant docs explaining the request/response structure and how other scripts can use `LaunchClient`.
