@@ -312,3 +312,12 @@ new ~ascMult~ of 22.5 is calculated as only a 1.04 ~ascResult~
 
 Whereas at lower levels a change from ~ascmult~ 1 to 2 is a
 ~ascResult~ of 2 because it's doubling.
+
+* Misc.
+
+** Remove RAM naming from buy-servers
+
+Change ~buy-servers.ts~ to not name servers with RAM amount.
+
+It makes upgrading harder, always having to pass rename and having the
+memory display that shows the amount of RAM makes it unnecessary.
