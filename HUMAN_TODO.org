@@ -276,6 +276,10 @@ correct order.
  - Also display an estimated time to afford based on rate of money gain
  - Implement iterating through all faction augments page automatically
 
+** Buy Augmentations
+
+Implement purchasing augmentation pre-reqs in correct order.
+
 * Hacknet
 
 ** Buy Hacknet Script ignores `--return-time`
