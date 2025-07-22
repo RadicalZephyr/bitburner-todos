@@ -286,12 +286,6 @@ absurdly high. It would be weird if the Hacknet formulas didn't take
 into account the multipliers though right?
 
 
-** Add a data collection program to determine Hacknet production statistics
-
-Use `ns.hacknet.getNodeStats()` to produce a CSV table of data
-regarding basic hacknet production at given levels.
-
-
 * Gang
 
 ** Boss Improvements
