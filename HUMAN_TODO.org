@@ -321,3 +321,7 @@ Change ~buy-servers.ts~ to not name servers with RAM amount.
 
 It makes upgrading harder, always having to pass rename and having the
 memory display that shows the amount of RAM makes it unnecessary.
+
+** Refactor ~backdoor-notify~ to get servers from Discovery
+
+Maybe? Would need a new API for getting _all_ servers.
