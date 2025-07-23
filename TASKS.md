@@ -1343,3 +1343,25 @@ sizes.
 6. **Documentation**
 
    * Document the new service in `README.md` or relevant docs explaining the request/response structure and how other scripts can use `LaunchClient`.
+
+
+## Fix Harvest Batch Spawning Pipeline
+
+Read `src/batch/harvest.ts`. There is a flaw in the batch spawning
+pipeline. The code to respawn new batches as they end assumes that the
+messages from each batch will arrive in the same order that the
+processes end. However, as these log files demonstrate, there are
+often subtle variations in message ordering from what we expect. This
+indicates a subtle but important race condition at work since we use
+these "finished" messages as the trigger to spawn a new batch in the
+same memory as the batch that we know has just finished.
+
+When the batches received out of order are all on the same host this
+doesn't affect anything. But when we receive messages out of order
+across two different hosts we can fail to spawn a new batch because we
+are trying to spawn it on the wrong host.
+
+Take a breath and consider this issue carefully. Give an analysis of
+the problem, highlight key sections of the code that contribute to
+this race condition, and suggest an approach for eliminating this race
+condition and ensure efficient memory utilization.
