@@ -1415,3 +1415,13 @@ condition and ensure efficient memory utilization.
    * Fix any issues until all commands pass.
 
 These changes remove the ordering assumption, ensure each batch respawns on the host that actually completed, and provide a verification step so misrouted messages do not silently spawn on the wrong host.
+
+
+## Expose free RAM chunks
+
+1. Extend `MemoryAllocator` with a method `getFreeChunks(): FreeChunk[]` that returns an array of `{ hostname: string; freeRam: number }` for every worker whose freeRam > 0.
+2. Update `getFreeRamTotal()` to call this method when computing the total.
+3. Modify the status handler in `src/services/memory.tsx` to respond with `{ freeRam: number, chunks: FreeChunk[] }`.
+4. Adjust type definitions in `src/services/client/memory.ts` (`FreeRam` interface) to include the new `chunks` list.
+5. Update `MemoryClient.getFreeRam()` to return this object.
+6. Add unit tests in `src/services/allocator.test.ts` covering `getFreeChunks()`.
