@@ -1431,10 +1431,16 @@ These changes remove the ordering assumption, ensure each batch respawns on the 
 
 1. Add a helper `availableBatchCount(chunks: FreeChunk[], batchRam: number): number`\
    that returns how many full batch allocations fit into the provided free chunks.
-2. Create `maxHackPercentForMemory(ns, host, memInfo: FreeRam): number` using binary search over hack percent. The check should verify both total free RAM and that at least one chunk can hold a batch.
+2. Create `maxHackPercentForMemory(ns, host, memInfo: FreeRam):
+   number` using binary search over hack percent. The check should
+   verify that there are enough free chunks for the maximum number of
+   batches.
+   - If the minimum hack percent batch cannot fit an entire batch,
+     fall back to calculating based on the number of batches that can
+     be spawned.
 3. Introduce a new function similar to `expectedValuePerRamSecond` to:
 
    * Use `maxHackPercentForMemory` to select the largest viable hack percent.
    * Limit the number of concurrent batches by `availableBatchCount`.
    * Compute profit per second using this effective batch count.
-4. Update the TaskSelector to pass the `FreeRam` object returned by the memory client.
+4. Update the TaskSelector and harvest script to use the new function and pass the `FreeRam` object returned by the memory client.
