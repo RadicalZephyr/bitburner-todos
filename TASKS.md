@@ -1425,3 +1425,16 @@ These changes remove the ordering assumption, ensure each batch respawns on the 
 4. Adjust type definitions in `src/services/client/memory.ts` (`FreeRam` interface) to include the new `chunks` list.
 5. Update `MemoryClient.getFreeRam()` to return this object.
 6. Add unit tests in `src/services/allocator.test.ts` covering `getFreeChunks()`.
+
+
+## Revise expected value calculation with memory limits
+
+1. Add a helper `availableBatchCount(chunks: FreeChunk[], batchRam: number): number`\
+   that returns how many full batch allocations fit into the provided free chunks.
+2. Create `maxHackPercentForMemory(ns, host, memInfo: FreeRam): number` using binary search over hack percent. The check should verify both total free RAM and that at least one chunk can hold a batch.
+3. Introduce a new function similar to `expectedValuePerRamSecond` to:
+
+   * Use `maxHackPercentForMemory` to select the largest viable hack percent.
+   * Limit the number of concurrent batches by `availableBatchCount`.
+   * Compute profit per second using this effective batch count.
+4. Update the TaskSelector to pass the `FreeRam` object returned by the memory client.
