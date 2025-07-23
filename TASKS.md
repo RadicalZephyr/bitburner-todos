@@ -1252,7 +1252,8 @@ I think there is a lot of room for improvement in how we calculate how
 valuable a target is.
 
 Read `src/batch/expected_value.ts`, `src/batch/harvest.ts`, and
-`src/batch/task_selector.ts`. Currently, when we calculate the
+`src/batch/task_selector.ts` and take a breath to consider how we
+calculate the expected value of a target. Currently, when we calculate the
 `expectedValuePerRamSecond` we calculate it based on hacking with only
 one thread. We also don't take into account how many batches can end
 per second. These deficiencies cause us to undervalue how profitable a
@@ -1266,7 +1267,9 @@ at full capacity.
 
 I think we could improve the task selector substantially if we
 incorporate the above improvements into our calculation of how
-valuable a task is to hack.
+valuable a task is to hack. Take a moment to think and then write a
+detailed, step-by-step task for improving the expected value
+calculation.
 
 In order to implement these improvements we need to enhance the
 information that the MemoryAllocator returns to clients from the
