@@ -1365,3 +1365,50 @@ Take a breath and consider this issue carefully. Give an analysis of
 the problem, highlight key sections of the code that contribute to
 this race condition, and suggest an approach for eliminating this race
 condition and ensure efficient memory utilization.
+
+## Fix Harvest Batch Pipeline Spawning Race Condition
+
+1. **Update `src/batch/w.ts`**
+
+   * Inside the `ns.atExit` handler, send both the host and PID:
+
+     ```typescript
+     const hostname = ns.self().server;
+     ns.atExit(() => {
+         if (typeof donePortId === 'number' && donePortId !== -1) {
+             const msg = { host: hostname, pid: ns.pid };
+             ns.writePort(donePortId, msg);
+         }
+     });
+     ```
+
+2. **Track PID‑to‑host mapping in `src/batch/harvest.ts`**
+
+   * When `spawnBatch` returns, record the host associated with its final PID:
+
+     ```typescript
+     const lastPid = batchPids.at(-1);
+     if (typeof lastPid === 'number') pidHostMap.set(lastPid, host);
+     ```
+
+3. **Parse completion messages and respawn on the correct host**
+
+   * Read the message from `finishedPort`.
+   * Look up the host for `pid` in `pidHostMap` and confirm it matches the `host` value in the message.
+   * Spawn the next batch on `host` from the message and remove the entry from `pidHostMap`.
+   * If the host does not match or is unknown, log a warning and default to the mapped host.
+
+4. **Add validation**
+
+   * Before spawning, check that the host from the message exists in the current `hosts` list. Log an error if it does not.
+   * This serves as an extra guard to ensure batches are launched only on available hosts.
+
+5. **Run repository checks**
+
+   * `npm install`
+   * `npm run build`
+   * `npx jest`
+   * `npx eslint src/`
+   * Fix any issues until all commands pass.
+
+These changes remove the ordering assumption, ensure each batch respawns on the host that actually completed, and provide a verification step so misrouted messages do not silently spawn on the wrong host.
