@@ -1444,3 +1444,22 @@ These changes remove the ordering assumption, ensure each batch respawns on the 
    * Limit the number of concurrent batches by `availableBatchCount`.
    * Compute profit per second using this effective batch count.
 4. Update the TaskSelector and harvest script to use the new function and pass the `FreeRam` object returned by the memory client.
+
+
+## Limit Spawning Harvest Tasks by Expected Gain
+
+Read `src/batch/task_selector.ts`. Currently, the `TaskSelector` will
+continue launching new harvest tasks of increasingly small batch sizes
+against less valuable targets until there is effectively no memory
+left over. However, these smaller batches against less valuable
+targets earn substantially less money. This is fine as long as RAM is
+plentiful, but as free RAM goes down the actual gains from these
+batches become extremely marginal. For instance, higher value targets
+might be earning billions of dollars per second while the lowest value
+targets added last are earning only thousands of dollars per second,
+representing less than 0.001% of total income. At the same time, these
+extremely marginal gains are using up RAM that could be used to sow or
+till more valuable targets.
+
+Take a breath and write a task to limit harvest tasks spawned when the
+increase in income becomes extremely marginal.
