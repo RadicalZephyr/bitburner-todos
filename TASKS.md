@@ -1463,3 +1463,19 @@ till more valuable targets.
 
 Take a breath and write a task to limit harvest tasks spawned when the
 increase in income becomes extremely marginal.
+
+
+### Generated Task from Codex
+
+1. Add a configuration option in `src/batch/config.ts` for the minimum fraction a new harvest must contribute to total harvest profit (e.g. `['harvestGainThreshold', 0.001]`).
+2. In `src/batch/task_selector.ts`, maintain a `Map<string, number>` of expected profits for active harvests.
+
+   * Store the `profit` from the `HarvestTask` object when `launchHarvest` succeeds.
+   * Remove entries when a host transitions out of harvesting in `pushTarget`.
+3. Inside `launchPendingTasks`, compute the sum of active profits before evaluating candidates.
+
+   * Ignore a harvest candidate if `task.profit < totalProfit * CONFIG.harvestGainThreshold` when `totalProfit > 0`.
+4. Update existing logic to use this new check before launching any harvest task.
+5. Document the new configuration option in relevant docs (e.g., `docs/task-selection.md`).
+
+This prevents spending memory on harvests that barely increase overall income.
