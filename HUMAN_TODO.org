@@ -318,3 +318,15 @@ memory display that shows the amount of RAM makes it unnecessary.
 ** Refactor ~backdoor-notify~ to get servers from Discovery
 
 Maybe? Would need a new API for getting _all_ servers.
+
+** Refactor memory tag parsing and registering even further
+
+It's still quite clunky, could be a function that replaces the
+`ns.flags` function and calls it internally. Instead of requiring the
+user to check the value it could throw an error to exit if the alloc
+id is bad.
+
+** Refactor all scripts to export a ~FLAGS~ constant
+
+- This constant would not include ~MEM_TAG_FLAGS~
+- Pass this `FLAGS` constant to the ~flags~ function in autocomplete
