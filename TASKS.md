@@ -1479,3 +1479,28 @@ increase in income becomes extremely marginal.
 5. Document the new configuration option in relevant docs (e.g., `docs/task-selection.md`).
 
 This prevents spending memory on harvests that barely increase overall income.
+
+
+## New Source File Level Service
+
+Read `src/bootstrap.ts`. Take a breath and think about the helper
+function `canUseSingularity`. This is a specific helper function for
+checking whether the player owns source file 4. As I unlock more
+source files and new API features, in order to keep my scripts usable
+by players who don't have these source files I want to include checks
+for the correct source file. However the `getOwnedSourceFiles` method
+has a fairly high RAM cost and I don't want to inflate many different
+scripts with that cost so we need to create a new `SourceFileService`
+for answering queries about what source files the player owns and what
+level they are.
+
+Take your time and write a detailed task for creating a new service
+daemon that other scripts can query to determine whether the player
+owns a specific source file and level.
+
+It should use the same client server architecture as other services
+like `src/services/port.ts` and `src/services/memory.tsx`. The task
+should also include creating a typed messaging API similar to
+`src/services/client/memory.ts` and
+`src/services/client/port.ts`. Take your time and make sure all the
+details are correct.
