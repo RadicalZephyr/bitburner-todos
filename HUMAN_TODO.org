@@ -67,6 +67,11 @@ version of the buy-servers script into a long-running service daemon
 that basically upgrades servers as the money comes in. Probably one by
 one instead of in a whole batch.
 
+*** UI Layout Service
+
+Add a UI window layout service that other scripts can call to align
+their window with certain criteria.
+
 
 * Batch Hacking
 
