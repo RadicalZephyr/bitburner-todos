@@ -1481,7 +1481,7 @@ increase in income becomes extremely marginal.
 This prevents spending memory on harvests that barely increase overall income.
 
 
-## New Source File Level Service
+## New Source File Level Service Meta Task
 
 Read `src/bootstrap.ts`. Take a breath and think about the helper
 function `canUseSingularity`. This is a specific helper function for
@@ -1504,3 +1504,44 @@ should also include creating a typed messaging API similar to
 `src/services/client/memory.ts` and
 `src/services/client/port.ts`. Take your time and make sure all the
 details are correct.
+
+
+### New Source File Level Service Implementation
+
+1. **Client API**
+
+   * Add `src/services/client/source_file.ts`.
+   * Define `SOURCE_FILE_PORT` and `SOURCE_FILE_RESPONSE_PORT` (next free numbers after other services).
+   * Declare `MessageType` enum with values like `RequestLevel`, and `RequestAll`.
+   * Create payload/response interfaces and a `SourceFileClient` class extending `Client`.
+
+     * `getLevel(sf: number)` → returns level (0 if not owned).
+     * `getAll()` → returns `SourceFileLvl[]`.
+
+2. **Daemon Implementation**
+
+   * New file `src/services/source_file.ts`.
+   * Use `MEM_TAG_FLAGS` and register with the memory service.
+   * On start, call `ns.singularity.getOwnedSourceFiles()` once and cache results in a `Map<number, number>`.
+   * Listen on the defined port with `readLoop`/`readAllFromPort`.
+   * For `RequestLevel`, reply with the cached level.\
+     For `RequestAll`, return the entire array.\
+   * Respond via the response port like other services.
+
+3. **Service Startup**
+
+   * Update `src/services/bootstrap.ts` to launch `/services/source_file.js` alongside existing daemons.
+
+4. **Client Usage**
+
+   * Replace `canUseSingularity` in `src/bootstrap.ts` with a `SourceFileClient` call:
+
+     ```ts
+     const client = new SourceFileClient(ns);
+     const sf4 = await client.getLevel(4);
+     if (sf4 > 0) { await automationBootstrap(ns); }
+     ```
+
+5. **Testing**
+
+   * Create a small script under `src/services/tests/` that uses `SourceFileClient` to print the level of a requested SF and validate service responses.
