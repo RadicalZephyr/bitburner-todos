@@ -1611,3 +1611,29 @@ implement this:
 
 This will prepare the task selector for being able to shutdown less
 profitable tasks when more profitable tasks arrive.
+
+### Detailed Task - Implement Task Selector Shutdown Signal
+
+1. Create `src/batch/client/harvest.ts`.
+
+   * Define `MessageType` with value `Shutdown`.
+   * Export `Payload`, `Message`, and a `HarvestClient` class extending `Client`.
+   * Implement `shutdown()` and `tryShutdown()` methods using `sendMessage()`/`trySendMessage()`.
+
+2. Update `src/batch/harvest.ts`.
+
+   * Extend CLI flags with `--port-id` and validate it in `parseArgs`.
+   * Modify `ParsedArgs` and `HarvestSetup` to include the new `portId`.
+   * In `prepareHarvest`, register an `atExit` handler releasing both the `donePortId` and `portId` via `PortClient`.
+   * Spawn a background `readLoop` on the control port. When a `Shutdown` message arrives, set `shuttingDown = true`.
+   * In `harvestPipeline`, stop spawning new batches once `shuttingDown` is true and exit after all running batches finish.
+
+3. Enhance `src/batch/task_selector.ts`.
+
+   * Import `PortClient` and maintain a `harvestPorts: Map<string, number>`.
+   * In `pushTarget`, clear any stored port for the host.
+   * Before launching a harvest task, request a port from `PortClient`.
+   * Pass the port to `/batch/harvest.js` using `--port-id`.
+   * Store the mapping `harvestPorts.set(host, portId)` for future control messages.
+
+4. Ensure all new exports include JSDoc comments and run formatting/linting tools.
