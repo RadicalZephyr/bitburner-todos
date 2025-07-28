@@ -1578,3 +1578,13 @@ pull request diffs:
 
 Be sure to include Github links to the pull request number that
 introduced each described change.
+
+
+## Rewrite changelog
+
+Take a deep breath and rewrite this information into a consistently formatted markdown CHANGELOG document.
+
+- structure the document as a list of broad categories (like "batch hacking", "services", "utilities") with sub-lists specifying each individual change.
+- The changes should include the pull request number that introduced that change at the end of the line describing the change.
+- Pull requests that have multiple items in different sections should be linked in each section.
+- Pull requests can be linked like this: `[#196][pr-196]` with all separate markdown link names (e.g. `pr-196`) defined at the end of the changelog block.
