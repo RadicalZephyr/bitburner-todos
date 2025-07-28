@@ -1584,3 +1584,30 @@ Use the following guidelines for how to structure the changelog:
 - The changes should include the pull request number that introduced that change at the end of the line describing the change.
 - Pull requests that have multiple items in different sections should be linked in each section.
 - Pull requests can be linked like this: `[#196][pr-196]` with all separate markdown link names (e.g. `pr-196`) defined at the end of the changelog block.
+
+
+## Implement task selector signal task shutdown
+
+Read `src/batch/task_selector.ts` and
+`src/batch/harvest.ts`. Currently the task selector doesn't have a way
+to signal unprofitable harvest tasks to shut down when more profitable
+targets become available.  Here's the rough outline of how we will
+implement this:
+
+ - We should create a typed message interface in
+   `src/batch/client/harvest.ts` for sending messages to harvest
+   scripts similar to `src/services/client/source-file.ts`.
+ - Currently we only define one message in the harvest client:
+   `Shutdown`.
+ - The task selector should allocate a port before spawning each
+   harvest task and pass it via a new command line flag `--port-id`.
+ - The task selector will store the port-id for that host for later use.
+ - Harvest tasks will register an `atExit` handler to release the port
+   passed with `--port-id`, then spawn a background task to read from
+   this port.
+ - When the harvest task receives a `Shutdown` message, it will go
+   into a controlled shutdown process where it stops spawning batches
+   and waits for all the currently running batches to exit.
+
+This will prepare the task selector for being able to shutdown less
+profitable tasks when more profitable tasks arrive.
