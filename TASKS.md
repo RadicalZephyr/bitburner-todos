@@ -1545,3 +1545,36 @@ details are correct.
 5. **Testing**
 
    * Create a small script under `src/services/tests/` that uses `SourceFileClient` to print the level of a requested SF and validate service responses.
+
+
+## Changelog Entries for each Pull Request
+
+Write a markdown codeblock containing CHANGELOG entries describing the
+major highlights of **user-facing** changes in each of the following
+pull request diffs:
+
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/172.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/173.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/174.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/175.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/176.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/177.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/178.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/180.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/181.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/182.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/183.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/184.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/185.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/186.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/187.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/188.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/189.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/190.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/191.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/192.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/193.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/195.diff
+
+Be sure to include Github links to the pull request number that
+introduced each described change.
