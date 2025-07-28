@@ -15,14 +15,6 @@ way to do it.
 
 ** Bugs
 
-*** Fix bug in reserved changing
-
-Right now, when we run scripts on a server with "reserved" memory
-(really should be "in-use" memory), it is changing the amount of
-reserved memory. This could be the source of the memory overcommit
-because then it's losing track of the fact that this memory is in use.
-
-
 ** Improvements
 
 *** Discovery
