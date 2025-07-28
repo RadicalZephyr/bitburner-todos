@@ -1549,10 +1549,12 @@ details are correct.
 
 ## Changelog Entries for each Pull Request
 
-Write a markdown codeblock containing CHANGELOG entries describing the
+Write a markdown document containing CHANGELOG entries describing the
 major highlights of **user-facing** changes in each of the following
 pull request diffs:
 
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/160.diff
+ - https://github.com/RadicalZephyr/bitburner-scripts/pull/166.diff
  - https://github.com/RadicalZephyr/bitburner-scripts/pull/172.diff
  - https://github.com/RadicalZephyr/bitburner-scripts/pull/173.diff
  - https://github.com/RadicalZephyr/bitburner-scripts/pull/174.diff
@@ -1576,13 +1578,7 @@ pull request diffs:
  - https://github.com/RadicalZephyr/bitburner-scripts/pull/193.diff
  - https://github.com/RadicalZephyr/bitburner-scripts/pull/195.diff
 
-Be sure to include Github links to the pull request number that
-introduced each described change.
-
-
-## Rewrite changelog
-
-Take a deep breath and rewrite this information into a consistently formatted markdown CHANGELOG document.
+Use the following guidelines for how to structure the changelog:
 
 - structure the document as a list of broad categories (like "batch hacking", "services", "utilities") with sub-lists specifying each individual change.
 - The changes should include the pull request number that introduced that change at the end of the line describing the change.
