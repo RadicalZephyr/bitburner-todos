@@ -193,34 +193,6 @@ Maybe we want to allocate to tilling and sowing first, but try and
 time it so that they will be ready by the time we have the level to
 target that host?
 
-*** Handle the case where computed batch size is greater than any server has available
-
-There's a very peculiar edge failure case in the relative lack of
-coordination between the task selector and the harvest scripts. It
-arises when the total free RAM in the system is large relative to the
-largest free chunk of RAM (i.e. the maximum total RAM size of any
-server). The task selector then naively launches a harvest script with
-a `--max-ram` parameter that the `harvest` script then computes can
-fit a batch size that is larger than the largest servers.
-
-For instance, this just happened to me with:
-
-- 1TB home RAM
-- 25x1TB servers
-- 5 port crackers, and ~398 hack level
-- ~maxHackPercent~ == 0.2 (20%)
-
-The total RAM is somewhere around ~27TB of RAM, which the harvest
-script then concluded it could fit a full-overlap set of batches of
-+1TB batches, so the allocation failed.
-
-Clearly, there is a critical piece of information missing in this
-decision making process, the maximum chunk size. I think the
-`MemoryAllocator` should probably be changed to return a
-`maxChunkSize` field, or perhaps a more detailed breakdown of the
-available chunk sizes. This way, the task allocator and the harvest
-script can make more informed choices about what batch size they try
-to create.
 
 * Stocks
 
