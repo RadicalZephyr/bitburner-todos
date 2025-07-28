@@ -1637,3 +1637,21 @@ profitable tasks when more profitable tasks arrive.
    * Store the mapping `harvestPorts.set(host, portId)` for future control messages.
 
 4. Ensure all new exports include JSDoc comments and run formatting/linting tools.
+
+## Task to add shutdown
+
+Read `src/batch/task_selector.ts`. We have implemented a mechanism to
+signal harvest tasks to shut down, but it is not yet being used.
+
+When RAM is full, we should compare the most valuable pending harvest
+task to our least valuable running tasks. We should decide if we
+should kill running tasks based on whether the RAM in some number of
+killed tasks can generate more money per second when assigned to the
+new more valuable target.
+
+- We should store the allocation details so we know how much memory
+  can be reclaimed and in what chunks.
+
+
+** When the task selector decides to stop harvesting a target, retrieve the corresponding `HarvestClient` from `launchedHarvestTasks` and call `shutdown()` (or `tryShutdown()`).
+* Remove the entry from `launchedHarvestTasks` after confirming shutdown.
