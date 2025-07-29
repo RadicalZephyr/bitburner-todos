@@ -1691,3 +1691,21 @@ integer to help match the response to the command.
 
 Consider these requirements carefully, then take a deep breath and
 write a detailed step-by-step task to write this new script.
+
+### Generated GTP Webserver Proxy Task
+
+1. Create `build/gtp-proxy.js`.
+2. Use `child_process.spawn('./katago', ['gtp'], { stdio: ['pipe', 'pipe', 'inherit'] })` to launch the GTP engine.
+3. Set up `readline` on the child’s stdout to parse responses. Maintain a queue to resolve pending command promises once a blank line terminates each response.
+4. Implement `sendCommand(cmd: string): Promise<string>` that writes `cmd + '\n'` to the engine’s stdin and resolves with the parsed reply.
+5. Use Express to start an HTTP server on `localhost:18924`. Route:
+
+   * `GET /boardsize/:n` → `sendCommand('boardsize ' + n)`
+   * `GET /clear_board` → `sendCommand('clear_board')`
+   * `GET /komi/:value` → `sendCommand('komi ' + value)`
+   * `GET /set_free_handicap/:encoded` → decode base64 JSON array, join vertices with spaces, and call `sendCommand('set_free_handicap ' + joined)`
+   * `GET /play/:vertex` → send `sendCommand('play ' + vertex)` then send `sendCommand('id=' + nextId + ' genmove ' + oppositeColor)` and return the genmove result. Keep `nextId` and color state.
+6. Ensure process termination handlers close the child on exit.
+7. Add a `npm run gtp-proxy` script entry in `package.json` for convenience.
+
+This new script enables simple HTTP control of KataGo via standard GTP commands.
