@@ -1655,3 +1655,39 @@ new more valuable target.
 
 ** When the task selector decides to stop harvesting a target, retrieve the corresponding `HarvestClient` from `launchedHarvestTasks` and call `shutdown()` (or `tryShutdown()`).
 * Remove the entry from `launchedHarvestTasks` after confirming shutdown.
+
+
+## GTP Webserver Proxy Task
+
+We need a new script in the `build/` directory that acts as an HTTP
+proxy to a Go Text Protocol (GTP) engine program. This script must do
+two things:
+
+1. run the GTP engine program `./katago gtp` as a child process.
+
+   - redirect the child processes standard input and output to pipes to maintain communication
+
+2. start an http server on `localhost:18924` that uses Express.js to handle the following GET request paths:
+
+   - `/boardsize/{n}` - `n` is an integer
+   - `/clear_board`
+   - `/komi/{value}` - `value` is a floating point value
+   - `/play/{vertex}` - `vertex` is a string specifying a Go board coordinate
+   - `/set_free_handicap/{vertices}` - `vertices` is a base64 encoded JSON array of vertex strings
+
+Board intersections (vertices), are encoded by a letter plus a
+number. On a 19x19 board the letters go from A to T, excluding I, from
+the left to the right. The numbers go from 1 to 19, from the bottom to
+the top.
+
+Each request path sends the corresponding GTP command to the child GTP
+engine process.
+
+The `/play` endpoint will send the specified `play {vertex}` command
+to the GTP engine, and then immediately send `id={id} genmove {opposite-color}`
+to get the engine to generate the move. It will wait to respond to the
+HTTP request until the engine generates a move. `id` is an increasing
+integer to help match the response to the command.
+
+Consider these requirements carefully, then take a deep breath and
+write a detailed step-by-step task to write this new script.
