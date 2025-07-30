@@ -1742,3 +1742,60 @@ This new script enables simple HTTP control of KataGo via standard GTP commands.
 4. Keep `MEM_TAG_FLAGS` out of the autocomplete call.
 5. Run `npx prettier . --write` and verify TypeScript builds/tests still pass.
 6. Update CHANGELOG and documentation if any usage messages changed.
+
+
+## Task to Document all configuration values
+
+Read the `AGENTS.md` file, paying specific attention to the new
+template for creating new scripts. We now recommend documenting
+configuration values for a script in a new section in the standard
+usage message. Most scripts in the repository that use configuration
+values do not document them in this manner.
+
+Take a deep breath and write a detailed, step-by-step task for
+updating all scripts whose behavior can be customized by configuration
+values to document them in their usage message according to the new
+style guide. Scripts that use config values that have no usage message
+should have a standard format usage message added including a brief
+description, all command line flags and the configuration values that
+can be used.
+
+### Document all configuration values
+
+These files use `CONFIG` values but do not consistently document which
+config values they use for the end user:
+
+- `src/hacknet/buy.ts`
+- `src/hacknet/sell-hashes.ts`
+- `src/gang/new-manage.ts`
+- `src/gang/manage.ts`
+- `src/batch/monitor.tsx`
+- `src/batch/harvest.ts`
+- `src/batch/till.ts`
+- `src/batch/sow.ts`
+- `src/batch/expected_value.ts`
+- `src/batch/task_selector.ts`
+- `src/services/updater.ts`
+- `src/services/discover.ts`
+- `src/automation/loop-install.ts`
+- `src/stock/backtest.ts`
+- `src/stock/sweep.ts`
+- `src/stock/tracker.ts`
+- `src/stock/trader.ts`
+- `src/go/kataPlay.ts`
+- `src/corp/eat.tsx`
+
+
+1. For every file listed above, examine the `main` function:
+
+   * If the script already prints a usage message (look for `USAGE:`), modify it to match the AGENTS.md template. Insert a new `CONFIGURATION` section enumerating every `CONFIG` field the script accesses.
+   * If the script lacks a usage message entirely, add a `--help` flag and output following the template. Include a short description, example usage, all flags, and the configuration values.
+2. Ensure each `const FLAGS` array includes `['help', false]`.
+3. Check that flags are type-validated per AGENTS.md (e.g., `typeof flags.foo !== 'number'`).
+4. Run `npm install` if needed, then verify:
+
+   * `npm run build`
+   * `npm run codex-test`
+   * `npx eslint src/`
+5. Update `CHANGELOG.md` under “Unreleased → Repository Wide Improvements” with a note that scripts now document config values in their help messages.
+6. Commit changes in batches grouped by directory, with prefixes matching the directory (e.g., `[hacknet]`, `[gang]`, `[batch]`, `[services]`, `[stock]`).
