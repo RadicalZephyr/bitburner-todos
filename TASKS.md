@@ -1799,3 +1799,70 @@ config values they use for the end user:
    * `npx eslint src/`
 5. Update `CHANGELOG.md` under “Unreleased → Repository Wide Improvements” with a note that scripts now document config values in their help messages.
 6. Commit changes in batches grouped by directory, with prefixes matching the directory (e.g., `[hacknet]`, `[gang]`, `[batch]`, `[services]`, `[stock]`).
+
+
+## Improve flags function type safety and reduce boilerplate
+
+The netscript API has a function for parsing command line flags like
+`--help` using a provided "schema" list.  The types in the Netscript
+API are not as helpful as they could be, and I want to write a wrapper
+function and associated types to improve the strength of the types and
+reduce the amount of boilerplate type assertion that my scripts need
+to do.
+
+```ts
+function flags(schema: [string, string | number | boolean | string[]][]): {
+    [key: string]: ScriptArg | string[];
+};
+```
+
+The schema is a list of `[key, default_value]` tuples, where each
+`key` is a string and the type of the default value informs the
+`ns.flags` how to parse that flag, and how to coerce the arguments
+from the command line.
+
+The flags function parses the command line arguments passed to the
+script and returns an object with a field for every flag in the
+schema, as well as an `_` field for the remaining arguments with all
+of the flags and associated flag arguments removed.
+
+Typical usage of this function is done like so:
+
+```ts
+const flags = ns.flags([['min', -1], ['spend', -1], ['help', false]]);
+```
+
+If the script was called with these arguments:
+
+```bash
+./script arg1 --spend 2 45 arg2 true
+```
+
+then the `flags` object would contain these values:
+
+```json
+{
+  "min": -1,
+  "spend": 2,
+  "help": false,
+  "_": ["arg1", 45, "arg2", true]
+}
+```
+
+Notice in particular that every key in the flags schema is present as
+a field on the `flags` object, and the type of the associated value
+matches the type of the default argument in the schema value.
+
+I want to write a new typescript function to wrap the `ns.flags`
+function that provides a richer and more specific type representation of the returned
+flags object. Using the same example flags and arguments, the derived
+type should be equivalent to:
+
+```ts
+type ExampleFlags = {
+  min: number;
+  spend: number;
+  help: boolean;
+  _: ScriptArg[];
+};
+```
