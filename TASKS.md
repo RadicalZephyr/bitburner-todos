@@ -1709,3 +1709,36 @@ write a detailed step-by-step task to write this new script.
 7. Add a `npm run gtp-proxy` script entry in `package.json` for convenience.
 
 This new script enables simple HTTP control of KataGo via standard GTP commands.
+
+
+## Fix engine exit
+
+* In `build/gtp-proxy.js`, listen for `engine.on('exit')` and reject any pending promises from `sendCommand`.
+* Log a clear error message and shut down the HTTP server when the engine exits.
+* Add a brief comment in README explaining that the proxy will exit if KataGo stops.
+
+### Make use of autocomplete flags support
+
+1. Inspect every file in `src/` that calls `ns.flags()` with custom options other than `MEM_TAG_FLAGS`.
+
+   * Examples include:
+
+     * `batch/harvest.ts`
+     * `batch/till.ts`
+     * `batch/test.ts`
+     * `batch/monitor.tsx`
+     * `stock/backtest.ts`
+     * `stock/sweep.ts`
+     * `fetch-contracts.ts`
+     * `services/memory.tsx`
+     * `util/clear-port.ts`
+     * any other script declaring flags besides `MEM_TAG_FLAGS`
+
+2. In each script:
+
+   * Move the array of flag definitions to a module-level constant named `FLAGS`.
+   * Modify `main` to call `ns.flags([...FLAGS, ...MEM_TAG_FLAGS])`.
+3. Ensure an `autocomplete` function exists. It should call `data.flags(FLAGS)` and then return relevant completions (e.g., `data.servers` or an empty array) for any positional arguments (typically usages of `const rest = flags._ as string[];`).
+4. Keep `MEM_TAG_FLAGS` out of the autocomplete call.
+5. Run `npx prettier . --write` and verify TypeScript builds/tests still pass.
+6. Update CHANGELOG and documentation if any usage messages changed.
