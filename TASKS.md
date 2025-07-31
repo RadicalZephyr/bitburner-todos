@@ -1785,20 +1785,19 @@ config values they use for the end user:
 - `src/go/kataPlay.ts`
 - `src/corp/eat.tsx`
 
-
 1. For every file listed above, examine the `main` function:
 
    * If the script already prints a usage message (look for `USAGE:`), modify it to match the AGENTS.md template. Insert a new `CONFIGURATION` section enumerating every `CONFIG` field the script accesses.
    * If the script lacks a usage message entirely, add a `--help` flag and output following the template. Include a short description, example usage, all flags, and the configuration values.
 2. Ensure each `const FLAGS` array includes `['help', false]`.
-3. Check that flags are type-validated per AGENTS.md (e.g., `typeof flags.foo !== 'number'`).
-4. Run `npm install` if needed, then verify:
+3. Verify:
 
    * `npm run build`
    * `npm run codex-test`
-   * `npx eslint src/`
-5. Update `CHANGELOG.md` under “Unreleased → Repository Wide Improvements” with a note that scripts now document config values in their help messages.
-6. Commit changes in batches grouped by directory, with prefixes matching the directory (e.g., `[hacknet]`, `[gang]`, `[batch]`, `[services]`, `[stock]`).
+   * `npm run lint`
+
+4. Update `CHANGELOG.md` under “Unreleased → Repository Wide Improvements” with a note that scripts now document config values in their help messages.
+5. Commit changes in batches grouped by directory, with prefixes matching the directory (e.g., `[hacknet]`, `[gang]`, `[batch]`, `[services]`, `[stock]`).
 
 
 ## Improve flags function type safety and reduce boilerplate
